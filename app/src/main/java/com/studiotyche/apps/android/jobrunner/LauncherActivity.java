@@ -45,6 +45,8 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
 
+        getTopAlerts();
+
         registerWithGoogle();
         LocalBroadcastManager.getInstance(LauncherActivity.this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(AppPreferences.REGISTRATION_COMPLETE));
@@ -52,7 +54,6 @@ public class LauncherActivity extends AppCompatActivity {
         Bundle data = new Bundle();
         intent.putExtra("RegisteredWithGoogle", registeredWithGoogle);
         intent.putExtra("Information", mInformationTextString);
-        getTopAlerts();
         intent.setClass(this, MainActivity.class);
         startActivity(intent);
         this.finish();
@@ -103,7 +104,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     public void getTopAlerts() {
-        Log.i("jobrunner","inside getTopAlerts()");
+        Log.i("jobrunner", "inside getTopAlerts()");
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://gabja-harishvi.rhcloud.com/rest/getTop";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -112,13 +113,13 @@ public class LauncherActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         Type listType = new TypeToken<ArrayList<Alert>>() {
                         }.getType();
-                        Log.i("jobrunner","got response.");
+                        Log.i("jobrunner", "got response.");
                         ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
-                        for(Alert alert: alerts)
-                        DbHelper.getInstance(getApplicationContext()).addNewAlert(alert);
-                        MainActivity.alerts.clear();
-                        MainActivity.alerts.addAll(DbHelper.getInstance(getApplicationContext()).getAllAlerts());
-                        AlertFeedFragment.adapter.notifyDataSetChanged();
+                        for (Alert alert : alerts) {
+                            DbHelper.getInstance(getApplicationContext()).addNewAlert(alert);
+                            AlertFeedFragment.addItem(0);
+                        }
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -131,8 +132,5 @@ public class LauncherActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
-
     }
-
-
 }

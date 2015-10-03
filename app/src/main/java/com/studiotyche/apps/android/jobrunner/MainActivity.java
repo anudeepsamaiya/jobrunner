@@ -24,7 +24,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+/*
 
+        DbHelper.getInstance(this).addNewAlert(new Alert("A", "B", "C", "D", "3"));
+        DbHelper.getInstance(this).addNewAlert(new Alert("E", "H", "K", "M", "5"));
+        DbHelper.getInstance(this).addNewAlert(new Alert("F", "I", "L", "O", "8"));
+        DbHelper.getInstance(this).addNewAlert(new Alert("G", "J", "M", "P", "7"));
+
+*/
         Intent intent = new Intent();
         if (intent.getBooleanExtra("RegisteredWithGoogle", false)) {
             mInformationTextView.setVisibility(View.VISIBLE);

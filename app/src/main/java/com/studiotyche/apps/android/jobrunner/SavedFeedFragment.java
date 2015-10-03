@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,9 +21,9 @@ public class SavedFeedFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.ItemDecoration itemDecoration;
-    static SavedFeedFragmentAdapter adapter;
+    static RecyclerView.Adapter adapter;
 
-    List<Alert> alerts;
+    static List<Alert> alerts;
 
     public static SavedFeedFragment newInstance() {
         SavedFeedFragment fragment = new SavedFeedFragment();
@@ -32,7 +33,12 @@ public class SavedFeedFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        alerts = new ArrayList<Alert>();
+        adapter = new SavedFeedFragmentAdapter(this.getContext(), alerts);
+        if (alerts.isEmpty()) {
+            alerts = DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.SAVED, 50);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -44,13 +50,16 @@ public class SavedFeedFragment extends Fragment {
         layoutManager = new LinearLayoutManager(this.getContext(),
                 LinearLayoutManager.VERTICAL, false);
         itemDecoration = new DividerItemDecoration(this.getContext());
-        adapter = new SavedFeedFragmentAdapter(this.getContext(),
-                DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.SAVED, 50));
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    public static void addItem(int pos) {
+        adapter.notifyItemInserted(pos);
+        adapter.notifyItemRangeChanged(pos, alerts.size());
     }
 }

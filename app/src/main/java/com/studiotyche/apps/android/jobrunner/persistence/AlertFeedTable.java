@@ -23,7 +23,7 @@ public interface AlertFeedTable {
             + COLUMN_TITLE + " TEXT NOT NULL, "
             + COLUMN_DESCRIPTION + " TEXT NOT NULL, "
             + COLUMN_LINK + " TEXT NOT NULL, " + COLUMN_TIMESTAMP + " TEXT NOT NULL, "
-            + COLUMN_STATE + " NUMBER NOT NULL, " + ");";
+            + COLUMN_STATE + " NUMBER NOT NULL " + ");";
 
     String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME;
 }

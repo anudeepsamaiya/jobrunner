@@ -117,14 +117,16 @@ public final class DbHelper extends SQLiteOpenHelper {
     }
 
     public void updateAlertState(Alert alert, @State int state) {
-        String query = " WHERE " + AlertFeedTable.COLUMN_ID + " = " + alert.id;
+        String query = AlertFeedTable.COLUMN_ID + " = " + alert.id;
         SQLiteDatabase sqliteDatabase = getWritableDatabase(context);
         ContentValues cv = new ContentValues();
 
         cv.put(AlertFeedTable.COLUMN_STATE, state);
 
         sqliteDatabase.beginTransaction();
+
         sqliteDatabase.update(AlertFeedTable.NAME, cv, query, null);
+
         sqliteDatabase.setTransactionSuccessful();
         sqliteDatabase.endTransaction();
         sqliteDatabase.close();

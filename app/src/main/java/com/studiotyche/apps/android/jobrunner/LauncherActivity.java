@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -26,25 +23,25 @@ public class LauncherActivity extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private TextView mInformationTextView;
 
+    private static String mInformationTextString;
+    private static Boolean registeredWithGoogle = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
-        new AsyncTask<Object, Object, Object>() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                registerWithGoogle();
-                LocalBroadcastManager.getInstance(LauncherActivity.this).registerReceiver(mRegistrationBroadcastReceiver,
-                        new IntentFilter(AppPreferences.REGISTRATION_COMPLETE));
-                return null;
-            }
-        }.execute();
+
+        registerWithGoogle();
+        LocalBroadcastManager.getInstance(LauncherActivity.this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(AppPreferences.REGISTRATION_COMPLETE));
 
         Intent intent = new Intent();
-
+        Bundle data = new Bundle();
+        intent.putExtra("RegisteredWithGoogle", registeredWithGoogle);
+        intent.putExtra("Information", mInformationTextString);
+        intent.setClass(this, MainActivity.class);
+        startActivity(intent);
     }
 
 
@@ -58,12 +55,11 @@ public class LauncherActivity extends AppCompatActivity {
                         .getBoolean(AppPreferences.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
                 } else {
-                    mInformationTextView.setVisibility(View.VISIBLE);
-                    mInformationTextView.setText(getString(R.string.token_error_message));
+                    mInformationTextString = getString(R.string.token_error_message);
+                    registeredWithGoogle = false;
                 }
             }
         };
-        mInformationTextView = (TextView) findViewById(R.id.informationTextView);
 
         if (checkPlayServices()) {
             Intent intent = new Intent(this, RegistrationIntentService.class);

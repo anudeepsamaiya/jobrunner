@@ -43,6 +43,8 @@ public class LauncherActivity extends AppCompatActivity {
             }
         }.execute();
 
+        Intent intent = new Intent();
+
     }
 
 

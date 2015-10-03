@@ -96,7 +96,8 @@ public final class DbHelper extends SQLiteOpenHelper {
         ArrayList<Alert> allAlerts = new ArrayList<>();
 
         SQLiteDatabase sqliteDatabase = getReadableDatabase(context);
-        Cursor cursor = sqliteDatabase.rawQuery("Select * from " + AlertFeedTable.NAME + "order by desc", null);
+        Cursor cursor = sqliteDatabase.rawQuery("SELECT * FROM " + AlertFeedTable.NAME + "ORDER BY "
+                + AlertFeedTable.COLUMN_TIMESTAMP + " DESC", null);
 
         Log.d(TAG + " getALlAlerts()", "Cursor size " + cursor.getCount());
         if (cursor != null && cursor.getCount() > 0) {
@@ -122,7 +123,8 @@ public final class DbHelper extends SQLiteOpenHelper {
         ArrayList<Alert> allAlerts = new ArrayList<>();
 
         SQLiteDatabase sqliteDatabase = getReadableDatabase(context);
-        Cursor cursor = sqliteDatabase.rawQuery("Select * from " + SavedFeedTable.NAME, null);
+        Cursor cursor = sqliteDatabase.rawQuery("SELECT * FROM " + SavedFeedTable.NAME + "ORDER BY "
+                + SavedFeedTable.COLUMN_TIMESTAMP + " DESC", null);
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {

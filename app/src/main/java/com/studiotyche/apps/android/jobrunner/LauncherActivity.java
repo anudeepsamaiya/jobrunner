@@ -11,8 +11,21 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 /**
  * Created by AnudeepSamaiya on 01-10-2015.
@@ -39,6 +52,7 @@ public class LauncherActivity extends AppCompatActivity {
         Bundle data = new Bundle();
         intent.putExtra("RegisteredWithGoogle", registeredWithGoogle);
         intent.putExtra("Information", mInformationTextString);
+        getTopAlerts();
         intent.setClass(this, MainActivity.class);
         startActivity(intent);
         this.finish();
@@ -87,4 +101,35 @@ public class LauncherActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    public void getTopAlerts() {
+        Log.i("jobrunner","inside getTopAlerts()");
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "https://gabja-harishvi.rhcloud.com/rest/getTOP";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Type listType = new TypeToken<ArrayList<Alert>>() {
+                        }.getType();
+                        Log.i("jobrunner","got response.");
+                        ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
+                        for(Alert alert: alerts)
+                        DbHelper.getInstance(getApplicationContext()).addNewAlert(alert);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+
+    }
+
+
 }

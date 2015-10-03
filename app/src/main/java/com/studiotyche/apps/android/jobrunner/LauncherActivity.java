@@ -116,6 +116,8 @@ public class LauncherActivity extends AppCompatActivity {
                         ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
                         for(Alert alert: alerts)
                         DbHelper.getInstance(getApplicationContext()).addNewAlert(alert);
+                        MainActivity.alerts = DbHelper.getInstance(getApplicationContext()).getAllAlerts();
+                        AlertFeedFragment.adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
             @Override

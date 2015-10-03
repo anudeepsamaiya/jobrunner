@@ -33,6 +33,7 @@ public class SavedFeedFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         alerts = new ArrayList<Alert>();
         adapter = new SavedFeedFragmentAdapter(this.getContext(), alerts);
         if (alerts.isEmpty()) {

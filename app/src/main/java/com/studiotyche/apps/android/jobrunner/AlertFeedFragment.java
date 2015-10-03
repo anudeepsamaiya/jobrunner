@@ -25,6 +25,7 @@ public class AlertFeedFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         alerts = new ArrayList<Alert>();
         adapter = new RVAdapter(this.getContext(), alerts);
         if (alerts.isEmpty()) {

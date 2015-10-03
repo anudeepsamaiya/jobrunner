@@ -41,7 +41,7 @@
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
-                <category android:name="com.example.gcm" />
+                <category android:name="com.studiotyche.apps.android.jobrunner.gcmquickstart" />
             </intent-filter>
         </receiver>
 

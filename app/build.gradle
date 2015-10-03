@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 23
@@ -34,3 +34,4 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.3.1'
 }
+apply plugin: 'com.google.gms.google-services'

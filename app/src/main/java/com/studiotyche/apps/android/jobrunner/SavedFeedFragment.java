@@ -20,7 +20,7 @@ public class SavedFeedFragment extends Fragment {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.ItemDecoration itemDecoration;
-    RecyclerView.Adapter adapter;
+    static SavedFeedFragmentAdapter adapter;
 
     List<Alert> alerts;
 
@@ -41,9 +41,11 @@ public class SavedFeedFragment extends Fragment {
         View rootView = layoutInflater.inflate(R.layout.fragment_feed, parent, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview);
-        layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(this.getContext(),
+                LinearLayoutManager.VERTICAL, false);
         itemDecoration = new DividerItemDecoration(this.getContext());
-        adapter = new SavedFeedFragmentAdapter(this.getContext(), DbHelper.getInstance(this.getActivity()).getAllSavedAlerts());
+        adapter = new SavedFeedFragmentAdapter(this.getContext(),
+                DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.SAVED, 50));
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(itemDecoration);
@@ -51,5 +53,4 @@ public class SavedFeedFragment extends Fragment {
 
         return rootView;
     }
-
 }

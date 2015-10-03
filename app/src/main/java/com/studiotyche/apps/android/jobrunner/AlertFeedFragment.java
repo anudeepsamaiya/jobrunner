@@ -26,7 +26,7 @@ public class AlertFeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        alerts = DbHelper.getInstance(this.getActivity()).getAllAlerts();
+        alerts = DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.RECENT, 50);
         Log.d(TAG, " before for");
         for (Alert a : alerts) {
             Log.d(TAG, a.getTitle() + " " + a.getDesc() + " " + a.getLink() + " " + a.getTimeStamp() + " ");

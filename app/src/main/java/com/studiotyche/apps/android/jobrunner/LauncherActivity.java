@@ -35,13 +35,8 @@ public class LauncherActivity extends AppCompatActivity {
         registerWithGoogle();
         LocalBroadcastManager.getInstance(LauncherActivity.this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(AppPreferences.REGISTRATION_COMPLETE));
-        try {
-            wait(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         Intent intent = new Intent();
-        Bundle data = new Bundle();
         intent.putExtra("RegisteredWithGoogle", registeredWithGoogle);
         intent.putExtra("Information", mInformationTextString);
         intent.setClass(this, MainActivity.class);

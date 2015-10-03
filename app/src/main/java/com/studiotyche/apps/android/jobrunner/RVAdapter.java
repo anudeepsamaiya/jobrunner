@@ -46,7 +46,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
         return alerts.size();
     }
 
-    public static class AlertViewHolder extends RecyclerView.ViewHolder {
+    public class AlertViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
         Button btnLink, btnSave;
 
@@ -60,24 +60,36 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
             btnLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(alerts.get(getAdapterPosition()).getLink()));
-                    context.startActivity(browserIntent);
+                    onBtnLinkClicked(v, getAdapterPosition());
                 }
             });
 
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onSaveClicked(view);
+                    onSaveClicked(view, getAdapterPosition());
                 }
             });
         }
+    }
 
-        void onSaveClicked(View view) {
-            DbHelper.getInstance(context).addSavedFeedRecord(alerts.get(getAdapterPosition()));
-            Snackbar.make(view, "Item Saved", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", null).show();
-            view.setEnabled(false);
-        }
+    private void onBtnLinkClicked(View v, int pos) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(alerts.get(pos).getLink()));
+        context.startActivity(browserIntent);
+    }
+
+    void onSaveClicked(View view, int pos) {
+        DbHelper.getInstance(context).saveAlert(alerts.get(pos));
+        SavedFeedFragment.adapter.addItem(pos);
+        removeItem(pos);
+        Snackbar.make(view, "Item Saved", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", null).show();
+        view.setEnabled(false);
+    }
+
+    void removeItem(int position) {
+        alerts.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, alerts.size());
     }
 }

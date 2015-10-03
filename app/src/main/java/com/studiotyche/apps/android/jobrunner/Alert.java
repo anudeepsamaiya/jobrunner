@@ -4,13 +4,14 @@ package com.studiotyche.apps.android.jobrunner;
  * Created by harish on 24/9/15.
  */
 public class Alert {
+    public String id;
     public String title;
     public String desc;
     public String link;
     public String timestamp;
-    private String timeStamp;
 
-    public Alert(String title, String description, String link, String timestamp) {
+    public Alert(String id, String title, String description, String link, String timestamp) {
+        this.id = id;
         this.title = title;
         this.desc = description;
         this.link = link;
@@ -41,7 +42,7 @@ public class Alert {
         return timestamp;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

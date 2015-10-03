@@ -1,4 +1,5 @@
 package com.studiotyche.apps.android.jobrunner;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
 import java.util.List;
 
@@ -48,7 +51,7 @@ public class SavedFeedFragmentAdapter extends RecyclerView.Adapter<SavedFeedFrag
         return alerts.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
         Button btnLink, btnRemove;
         View itemView;
@@ -74,18 +77,32 @@ public class SavedFeedFragmentAdapter extends RecyclerView.Adapter<SavedFeedFrag
             btnRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onRemoveClicked(view);
+                    onRemoveClicked(view, getAdapterPosition());
                 }
             });
         }
+    }
 
-        void onRemoveClicked(View view) {
-            //DbHelper.getInstance(context).addSavedFeedRecord(alerts.get(getAdapterPosition()));
-            itemView.setEnabled(false);
-            itemView.setVisibility(View.GONE);
-            Snackbar.make(view, "Item Removed", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", null).show();
-            view.setEnabled(false);
-        }
+    void onRemoveClicked(View view, int pos) {
+        DbHelper.getInstance(context).removeAlert(alerts.get(pos));
+        removeItem(pos);
+        Snackbar.make(view, "Item Removed", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", null).show();
+        view.setEnabled(false);
+    }
+
+    public void addItem(int pos) {
+        notifyItemInserted(pos);
+        notifyItemRangeChanged(pos, alerts.size());
+    }
+
+    public void removeItem(int position) {
+        alerts.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, alerts.size());
+    }
+
+    public void updateItems() {
+
     }
 }

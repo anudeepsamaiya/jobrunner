@@ -105,7 +105,7 @@ public class LauncherActivity extends AppCompatActivity {
     public void getTopAlerts() {
         Log.i("jobrunner","inside getTopAlerts()");
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://gabja-harishvi.rhcloud.com/rest/getTOP";
+        String url = "http://gabja-harishvi.rhcloud.com/rest/getTop";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override

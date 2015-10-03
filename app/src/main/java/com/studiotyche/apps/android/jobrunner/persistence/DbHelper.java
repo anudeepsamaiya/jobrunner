@@ -96,7 +96,7 @@ public final class DbHelper extends SQLiteOpenHelper {
         ArrayList<Alert> allAlerts = new ArrayList<>();
 
         SQLiteDatabase sqliteDatabase = getReadableDatabase(context);
-        Cursor cursor = sqliteDatabase.rawQuery("Select * from " + AlertFeedTable.NAME + "order by ", null);
+        Cursor cursor = sqliteDatabase.rawQuery("Select * from " + AlertFeedTable.NAME + "order by desc", null);
 
         Log.d(TAG + " getALlAlerts()", "Cursor size " + cursor.getCount());
         if (cursor != null && cursor.getCount() > 0) {

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -118,7 +119,8 @@ public class LauncherActivity extends AppCompatActivity {
                         DbHelper.getInstance(getApplicationContext()).addNewAlert(alert);
                         MainActivity.alerts.clear();
                         MainActivity.alerts.addAll(DbHelper.getInstance(getApplicationContext()).getAllAlerts());
-                        AlertFeedFragment.adapter.notifyDataSetChanged();
+                        RecyclerView.Adapter adapter =  new RVAdapter(getApplicationContext(), MainActivity.alerts);
+                        AlertFeedFragment.rv.setAdapter(adapter);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -131,8 +133,5 @@ public class LauncherActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
-
     }
-
-
 }

@@ -21,6 +21,7 @@ public class AlertFeedFragment extends Fragment {
     private static final String TAG = "AlertFeedFragment";
     List<Alert> alerts;
     public static RecyclerView.Adapter adapter;
+    public static RecyclerView rv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,7 +34,7 @@ public class AlertFeedFragment extends Fragment {
             Log.d(TAG, a.getTitle() + " " + a.getDesc() + " " + a.getLink() + " " + a.getTimeStamp() + " ");
         }
 
-        RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.recyclerview);
+        rv = (RecyclerView) rootView.findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager llm = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this.getContext());
         adapter = new RVAdapter(this.getContext(), alerts);

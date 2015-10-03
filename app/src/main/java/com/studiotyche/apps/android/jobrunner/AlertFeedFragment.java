@@ -20,6 +20,7 @@ public class AlertFeedFragment extends Fragment {
 
     private static final String TAG = "AlertFeedFragment";
     List<Alert> alerts;
+    public static RecyclerView.Adapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +36,7 @@ public class AlertFeedFragment extends Fragment {
         RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.recyclerview);
         RecyclerView.LayoutManager llm = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(this.getContext());
-        RecyclerView.Adapter adapter = new RVAdapter(this.getContext(), alerts);
+        adapter = new RVAdapter(this.getContext(), alerts);
 
 
         rv.setLayoutManager(llm);

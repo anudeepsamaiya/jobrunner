@@ -22,6 +22,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.studiotyche.apps.android.jobrunner.persistence.AlertFeedTable;
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
 import java.lang.reflect.Type;
@@ -45,11 +46,13 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
 
-        getTopAlerts();
+        if (!DbHelper.getInstance(this).checkIfTableExists(AlertFeedTable.NAME))
+            getTopAlerts();
 
         registerWithGoogle();
         LocalBroadcastManager.getInstance(LauncherActivity.this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(AppPreferences.REGISTRATION_COMPLETE));
+
         Intent intent = new Intent();
         Bundle data = new Bundle();
         intent.putExtra("RegisteredWithGoogle", registeredWithGoogle);
@@ -111,15 +114,8 @@ public class LauncherActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Type listType = new TypeToken<ArrayList<Alert>>() {
-                        }.getType();
                         Log.i("jobrunner", "got response.");
-                        ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
-                        for (Alert alert : alerts) {
-                            DbHelper.getInstance(getApplicationContext()).addNewAlert(alert);
-                            AlertFeedFragment.addItem(0);
-                        }
-
+                        saveToDb(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -132,5 +128,17 @@ public class LauncherActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
+    }
+
+    private void saveToDb(String response) {
+        Type listType = new TypeToken<ArrayList<Alert>>() {
+        }.getType();
+        ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
+        for (Alert alert : alerts) {
+            DbHelper.getInstance(this).addNewAlert(alert);
+            AlertFeedFragment.getInstance(AlertFeedFragment.RECENT_FRAGMENT)
+                    .addItem(AlertFeedFragment.RECENT_FRAGMENT, 0);
+        }
+
     }
 }

@@ -132,6 +132,20 @@ public final class DbHelper extends SQLiteOpenHelper {
         sqliteDatabase.close();
     }
 
+    public boolean checkIfTableExists(String tableName) {
+        boolean tableExists = false;
+        SQLiteDatabase sqliteDatabase = getReadableDatabase();
+        Cursor cursor = sqliteDatabase.rawQuery("Select * from " + tableName, null);
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                tableExists = true;
+            }
+        }
+        cursor.close();
+        sqliteDatabase.close();
+        return tableExists;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(AlertFeedTable.CREATE);

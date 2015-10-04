@@ -19,17 +19,17 @@ import java.util.List;
 /**
  * Created by AnudeepSamaiya on 02-10-2015.
  */
-public class SavedFeedFragmentAdapter extends RecyclerView.Adapter<SavedFeedFragmentAdapter.ViewHolder> {
+public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.ViewHolder> {
 
-    String tag = "SavedFeedFragment";
+    String TAG = "SavedFeedAdapter";
 
-    static Context context;
-    static List<Alert> alerts;
+    Context context;
+    List<Alert> alerts;
 
-    public SavedFeedFragmentAdapter(Context context, List<Alert> alerts) {
-        SavedFeedFragmentAdapter.alerts = alerts;
-        SavedFeedFragmentAdapter.context = context;
-        Log.d(tag, "recievd alerts " + alerts.size());
+    public SavedFeedAdapter(Context context, List<Alert> alerts) {
+        this.alerts = alerts;
+        this.context = context;
+        Log.d(TAG, "Saving recieved alerts " + alerts.size());
     }
 
     @Override
@@ -92,14 +92,18 @@ public class SavedFeedFragmentAdapter extends RecyclerView.Adapter<SavedFeedFrag
     }
 
     public void addItem(int pos) {
-        notifyItemInserted(pos);
-        notifyItemRangeChanged(pos, alerts.size());
+        this.notifyItemInserted(pos);
+        this.notifyItemRangeInserted(0, alerts.size());
+        this.notifyItemRangeChanged(pos, alerts.size());
+        this.notifyDataSetChanged();
+        Log.i(TAG, "From SavedFeedAdapter addItem");
     }
 
-    public void removeItem(int position) {
+    void removeItem(int position) {
         alerts.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, alerts.size());
+        notifyDataSetChanged();
     }
 
     public void updateItems() {

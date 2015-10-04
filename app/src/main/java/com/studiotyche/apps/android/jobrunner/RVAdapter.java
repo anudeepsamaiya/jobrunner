@@ -16,7 +16,7 @@ import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
-    String tag = "RVAdapter";
+    String TAG = "RVAdapter";
 
     static Context context;
     static List<Alert> alerts;
@@ -24,7 +24,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
     public RVAdapter(Context context, List<Alert> alerts) {
         RVAdapter.alerts = alerts;
         RVAdapter.context = context;
-        Log.d(tag, "recievd alerts " + alerts.size());
+        Log.d(TAG, "recievd alerts " + alerts.size());
     }
 
     @Override
@@ -80,7 +80,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
 
     void onSaveClicked(View view, int pos) {
         DbHelper.getInstance(context).saveAlert(alerts.get(pos));
-        SavedFeedFragment.addItem(0);
+        FeedFragment.getInstance(FeedFragment.SAVED_FRAGMENT)
+                .addItem(FeedFragment.SAVED_FRAGMENT, pos);
         removeItem(pos);
         Snackbar.make(view, "Item Saved", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", null).show();
@@ -88,12 +89,18 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
     }
 
     public void addItem(int pos) {
-        notifyItemInserted(pos);
-        notifyItemRangeChanged(pos, alerts.size());
+        alerts = DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 5);
+        this.notifyItemInserted(pos);
+        this.notifyItemRangeInserted(0, alerts.size());
+        this.notifyItemRangeChanged(pos, alerts.size());
+        this.notifyDataSetChanged();
+        Log.i(TAG, "From RvAdapterv addItem");
     }
+
     void removeItem(int position) {
         alerts.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, alerts.size());
+        this.notifyDataSetChanged();
     }
 }

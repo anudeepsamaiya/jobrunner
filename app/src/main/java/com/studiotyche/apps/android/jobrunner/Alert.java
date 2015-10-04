@@ -4,13 +4,13 @@ package com.studiotyche.apps.android.jobrunner;
  * Created by harish on 24/9/15.
  */
 public class Alert {
-    public String id;
+    public long id;
     public String title;
     public String desc;
     public String link;
     public String timestamp;
 
-    public Alert(String id, String title, String description, String link, String timestamp) {
+    public Alert(long id, String title, String description, String link, String timestamp) {
         this.id = id;
         this.title = title;
         this.desc = description;

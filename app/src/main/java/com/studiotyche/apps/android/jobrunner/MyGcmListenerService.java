@@ -32,7 +32,8 @@ public class MyGcmListenerService extends GcmListenerService {
                 Log.d(TAG, alert.getDesc() + " " + alert.getLink() + " " + alert.getTimeStamp() + " " + alert.getTitle());
 
                 DbHelper.getInstance(this).addNewAlert(alert);
-                AlertFeedFragment.addItem(0);
+                FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT)
+                        .addItem(FeedFragment.RECENT_FRAGMENT, 0);
             }
         } else {
             // normal downstream message.

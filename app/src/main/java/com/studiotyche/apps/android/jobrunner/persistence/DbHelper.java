@@ -34,7 +34,7 @@ public final class DbHelper extends SQLiteOpenHelper {
     private Context context;
     private static final String TAG = "DbHelper";
 
-    private static final String DB_NAME = "gabja";
+    private static final String DB_NAME = "GABJA";
     private static final String DB_SUFFIX = ".db";
     private static final int DB_VERSION = 1;
 
@@ -80,7 +80,8 @@ public final class DbHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<Alert> getAllAlerts(@State int state, int limit) {
-        String id, title, description, link, timestamp;
+        String title, description, link, timestamp;
+        Long id;
 
         ArrayList<Alert> allAlerts = new ArrayList<>();
 
@@ -92,7 +93,7 @@ public final class DbHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
-                id = cursor.getString(cursor.getColumnIndex(AlertFeedTable.COLUMN_ID));
+                id = cursor.getLong(cursor.getColumnIndex(AlertFeedTable.COLUMN_ID));
                 title = cursor.getString(cursor.getColumnIndex(AlertFeedTable.COLUMN_TITLE));
                 description = cursor.getString(cursor.getColumnIndex(AlertFeedTable.COLUMN_DESCRIPTION));
                 link = cursor.getString(cursor.getColumnIndex(AlertFeedTable.COLUMN_LINK));
@@ -125,7 +126,8 @@ public final class DbHelper extends SQLiteOpenHelper {
 
         sqliteDatabase.beginTransaction();
 
-        sqliteDatabase.update(AlertFeedTable.NAME, cv, query, null);
+        int i = sqliteDatabase.update(AlertFeedTable.NAME, cv, query, null);
+        Log.d(TAG, "Number of Rows saved " + i);
 
         sqliteDatabase.setTransactionSuccessful();
         sqliteDatabase.endTransaction();
@@ -134,7 +136,7 @@ public final class DbHelper extends SQLiteOpenHelper {
 
     public boolean checkIfTableExists(String tableName) {
         boolean tableExists = false;
-        SQLiteDatabase sqliteDatabase = getReadableDatabase();
+        SQLiteDatabase sqliteDatabase = getReadableDatabase(context);
         Cursor cursor = sqliteDatabase.rawQuery("Select * from " + tableName, null);
         if (cursor != null) {
             if (cursor.getCount() > 0) {

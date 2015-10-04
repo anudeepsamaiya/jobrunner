@@ -80,8 +80,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
 
     void onSaveClicked(View view, int pos) {
         DbHelper.getInstance(context).saveAlert(alerts.get(pos));
-        FeedFragment.getInstance(FeedFragment.SAVED_FRAGMENT)
-                .addItem(FeedFragment.SAVED_FRAGMENT, pos);
+        FeedFragment.getInstance(DbHelper.getInstance(context).getAllAlerts(DbHelper.SAVED, 20));
         removeItem(pos);
         Snackbar.make(view, "Item Saved", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", null).show();

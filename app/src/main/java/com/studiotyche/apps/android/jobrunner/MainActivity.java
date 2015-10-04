@@ -14,12 +14,15 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     public static TextView mInformationTextView;
-
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             ab.setTitle(this.getTitle());
         }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -53,14 +56,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         final PageAdapter adapter = new PageAdapter(getSupportFragmentManager());
-        adapter.addFragment(FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT), "Recent");
-        adapter.addFragment(FeedFragment.getInstance(FeedFragment.SAVED_FRAGMENT), "Saved");
+
+        ArrayList<Alert> recentAlerts = DbHelper.getInstance(this).getAllAlerts(DbHelper.RECENT, 20);
+        ArrayList<Alert> savedAlerts = DbHelper.getInstance(this).getAllAlerts(DbHelper.SAVED, 20);
+
+        adapter.addFragment(FeedFragment.getInstance(recentAlerts), "Recent");
+        //adapter.addFragment(FeedFragment.getInstance(savedAlerts), "Saved");
         viewPager.setAdapter(adapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        setupViewPager(viewPager);
     }
 
     @Override

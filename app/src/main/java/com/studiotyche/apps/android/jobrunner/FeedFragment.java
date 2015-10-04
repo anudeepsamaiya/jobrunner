@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class FeedFragment extends Fragment {
 
+    private static final String TAG = "AlertFeedFragment";
+
     @IntDef({RECENT_FRAGMENT, SAVED_FRAGMENT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Name {
@@ -31,13 +33,11 @@ public class FeedFragment extends Fragment {
     public static final int RECENT_FRAGMENT = 0;
     public static final int SAVED_FRAGMENT = 1;
 
-    private static final String TAG = "AlertFeedFragment";
     List<Alert> alerts;
-
-    public RecyclerView rv;
+    RecyclerView rv;
     RecyclerView.LayoutManager llm;
     RecyclerView.ItemDecoration itemDecoration;
-    public RecyclerView.Adapter adapter;
+    RecyclerView.Adapter adapter;
 
     public static List<FeedFragment> mInstance = new ArrayList<>();
 
@@ -60,6 +60,7 @@ public class FeedFragment extends Fragment {
         alerts = new ArrayList<Alert>();
         alerts = DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.RECENT, 5);
         mInstance.get(RECENT_FRAGMENT).setAdapter(new RVAdapter(this.getContext(), alerts));
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -98,6 +99,7 @@ public class FeedFragment extends Fragment {
         Log.i(TAG, "From Add Item");
 
         if (instance == RECENT_FRAGMENT) {
+            alerts = DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.RECENT, 5);
             ((RVAdapter) getAdapter(RECENT_FRAGMENT)).addItem(pos);
         }
         if (instance == SAVED_FRAGMENT) {

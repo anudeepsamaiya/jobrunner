@@ -60,15 +60,15 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Alert> recentAlerts = DbHelper.getInstance(this).getAllAlerts(DbHelper.RECENT, 20);
         ArrayList<Alert> savedAlerts = DbHelper.getInstance(this).getAllAlerts(DbHelper.SAVED, 20);
 
-        adapter.addFragment(FeedFragment.getInstance(recentAlerts), "Recent");
-        //adapter.addFragment(FeedFragment.getInstance(savedAlerts), "Saved");
+        adapter.addFragment(FeedFragment.getInstance(recentAlerts, FeedAdapter.RECENT), "Recent");
+        adapter.addFragment(FeedFragment.getInstance(savedAlerts, FeedAdapter.SAVED), "Saved");
         viewPager.setAdapter(adapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setupViewPager(viewPager);
+        //setupViewPager(viewPager);
     }
 
     @Override

@@ -9,6 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.studiotyche.apps.android.jobrunner.persistence.AlertFeedTable;
+import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +31,7 @@ import java.util.List;
 public class FeedFragment extends Fragment {
 
     private static final String TAG = "FeedFragment";
+    int pos;
 
     List<Alert> alerts = new ArrayList<Alert>();
     RecyclerView rv;
@@ -25,10 +39,11 @@ public class FeedFragment extends Fragment {
     RecyclerView.ItemDecoration itemDecoration;
     RecyclerView.Adapter adapter;
 
-    public static FeedFragment getInstance(ArrayList<Alert> alerts) {
+    public static FeedFragment getInstance(ArrayList<Alert> alerts, @FeedAdapter.Name int pos) {
         FeedFragment feedFragment = new FeedFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList("mData", alerts);
+        args.putInt("Position", pos);
+        args.putParcelableArrayList("whichDataset", alerts);
         feedFragment.setArguments(args);
         return feedFragment;
     }
@@ -38,8 +53,18 @@ public class FeedFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Fragment Attached");
 
+        if (pos == 0)
+            if (!DbHelper.getInstance(this.getActivity()).checkIfTableExists(AlertFeedTable.NAME))
+                getTopAlerts();
+
         Bundle args = getArguments();
-        alerts = args.getParcelableArrayList("mData");
+        alerts = args.getParcelableArrayList("whichDataset");
+        pos = args.getInt("Position");
+
+        if (pos == 0)
+            adapter = new FeedAdapter(this.getActivity(), alerts, FeedAdapter.RECENT);
+        else
+            adapter = new FeedAdapter(this.getActivity(), alerts, FeedAdapter.SAVED);
     }
 
     @Override
@@ -54,12 +79,48 @@ public class FeedFragment extends Fragment {
         rv = (RecyclerView) rootView.findViewById(R.id.recyclerview);
         llm = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
         itemDecoration = new DividerItemDecoration(this.getActivity());
-        adapter = new RVAdapter(this.getActivity(), alerts);
 
         rv.setLayoutManager(llm);
         rv.addItemDecoration(itemDecoration);
         rv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         return rootView;
+    }
+
+
+    public void getTopAlerts() {
+        Log.i(TAG, "inside getTopAlerts() making volley call");
+        RequestQueue queue = Volley.newRequestQueue(this.getActivity());
+        String url = "http://gabja-harishvi.rhcloud.com/rest/getTop";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "got response. " + response);
+                        saveToDb(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                20000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+    }
+
+    private void saveToDb(String response) {
+        Type listType = new TypeToken<ArrayList<Alert>>() {
+        }.getType();
+        List<Alert> alerts = new Gson().fromJson(response, listType);
+        for (Alert alert : alerts) {
+            DbHelper.getInstance(this.getActivity()).addNewAlert(alert);
+            adapter.notifyDataSetChanged();
+        }
+
     }
 }

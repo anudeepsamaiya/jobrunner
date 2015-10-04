@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
@@ -74,8 +75,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
     }
 
     private void onBtnLinkClicked(View v, int pos) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(alerts.get(pos).getLink()));
-        context.startActivity(browserIntent);
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(alerts.get(pos).getLink()));
+            context.startActivity(browserIntent);
+        }
+        catch (Exception e){
+            Toast.makeText(context,"Broken website link.",Toast.LENGTH_LONG).show();
+        }
     }
 
     void onSaveClicked(View view, int pos) {

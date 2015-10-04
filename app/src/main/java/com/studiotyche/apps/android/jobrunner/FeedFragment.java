@@ -33,8 +33,8 @@ public class FeedFragment extends Fragment {
     public static final int RECENT_FRAGMENT = 0;
     public static final int SAVED_FRAGMENT = 1;
 
-    List<Alert> alerts;
-    RecyclerView rv;
+    public static List<Alert> alerts;
+    public static RecyclerView rv;
     RecyclerView.LayoutManager llm;
     RecyclerView.ItemDecoration itemDecoration;
     RecyclerView.Adapter adapter;

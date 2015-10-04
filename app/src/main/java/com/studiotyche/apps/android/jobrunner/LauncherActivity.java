@@ -136,12 +136,17 @@ public class LauncherActivity extends AppCompatActivity {
         ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
         for (Alert alert : alerts) {
             DbHelper.getInstance(this).addNewAlert(alert);
-            FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT)
+             FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT)
                     .addItem(FeedFragment.RECENT_FRAGMENT, 0);
             FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT)
                     .getAdapter(FeedFragment.RECENT_FRAGMENT)
                     .notifyDataSetChanged();
         }
 
+      /*  FeedFragment.alerts.clear();
+        FeedFragment.alerts.addAll(DbHelper.getInstance(this).getAllAlerts(DbHelper.RECENT,25));
+        RecyclerView.Adapter adapter =  new RVAdapter(getApplicationContext(), FeedFragment.alerts);
+        FeedFragment.rv.setAdapter(adapter);
+*/
     }
 }

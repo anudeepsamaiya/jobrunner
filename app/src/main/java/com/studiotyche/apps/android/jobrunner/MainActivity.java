@@ -14,51 +14,22 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    public static List<Alert> alerts;
     public static TextView mInformationTextView;
-/*
-
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-
-
-*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // {"desc":"Catching Joker and Saving Gotham","link":"DCComics.com","timestamp":"Fri Oct 02 21:41:19 GMT+05:30 2015","title":"Batman"}
-
-        //alerts = new ArrayList<Alert>();
-        //alerts.add(new Alert("A", "B", "C", "D"));
-/*
-        DbHelper.getInstance(this).addNewAlert(new Alert("A", "B", "C", "D"));
-        DbHelper.getInstance(this).addNewAlert(new Alert("E", "H", "K", "M"));
-        DbHelper.getInstance(this).addNewAlert(new Alert("F", "I", "L", "O"));
-        DbHelper.getInstance(this).addNewAlert(new Alert("G", "J", "M", "P"));
-*/
-/*
-
-        registerWithGoogle();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(AppPreferences.REGISTRATION_COMPLETE));
-
-*/
         Intent intent = new Intent();
         if (intent.getBooleanExtra("RegisteredWithGoogle", false)) {
             mInformationTextView.setVisibility(View.VISIBLE);
             mInformationTextView.setText(intent.getStringExtra("Information"));
         }
-        alerts = DbHelper.getInstance(this).getAllAlerts();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,13 +49,12 @@ public class MainActivity extends AppCompatActivity {
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        PageAdapter adapter = new PageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AlertFeedFragment(), "Recent");
-        adapter.addFragment(SavedFeedFragment.newInstance(), "Saved");
+        final PageAdapter adapter = new PageAdapter(getSupportFragmentManager());
+        adapter.addFragment(FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT), "Recent");
+        adapter.addFragment(FeedFragment.getInstance(FeedFragment.SAVED_FRAGMENT), "Saved");
         viewPager.setAdapter(adapter);
     }
 
@@ -95,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-/*
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
-*/
         super.onPause();
     }
 

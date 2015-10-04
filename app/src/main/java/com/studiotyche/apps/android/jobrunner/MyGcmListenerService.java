@@ -12,7 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
-import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;;
+import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
 public class MyGcmListenerService extends GcmListenerService {
 
@@ -32,6 +32,8 @@ public class MyGcmListenerService extends GcmListenerService {
                 Log.d(TAG, alert.getDesc() + " " + alert.getLink() + " " + alert.getTimeStamp() + " " + alert.getTitle());
 
                 DbHelper.getInstance(this).addNewAlert(alert);
+                FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT)
+                        .addItem(FeedFragment.RECENT_FRAGMENT, 0);
             }
         } else {
             // normal downstream message.

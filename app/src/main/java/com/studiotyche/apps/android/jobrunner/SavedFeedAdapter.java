@@ -1,4 +1,5 @@
 package com.studiotyche.apps.android.jobrunner;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,22 +12,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
+
 import java.util.List;
 
 /**
  * Created by AnudeepSamaiya on 02-10-2015.
  */
-public class SavedFeedFragmentAdapter extends RecyclerView.Adapter<SavedFeedFragmentAdapter.ViewHolder> {
+public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.ViewHolder> {
 
-    String tag = "SavedFeedFragment";
+    String TAG = "SavedFeedAdapter";
 
-    static Context context;
-    static List<Alert> alerts;
+    Context context;
+    List<Alert> alerts;
 
-    public SavedFeedFragmentAdapter(Context context, List<Alert> alerts) {
-        SavedFeedFragmentAdapter.alerts = alerts;
-        SavedFeedFragmentAdapter.context = context;
-        Log.d(tag, "recievd alerts " + alerts.size());
+    public SavedFeedAdapter(Context context, List<Alert> alerts) {
+        this.alerts = alerts;
+        this.context = context;
+        Log.d(TAG, "Saving recieved alerts " + alerts.size());
     }
 
     @Override
@@ -48,7 +51,7 @@ public class SavedFeedFragmentAdapter extends RecyclerView.Adapter<SavedFeedFrag
         return alerts.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
         Button btnLink, btnRemove;
         View itemView;
@@ -74,18 +77,36 @@ public class SavedFeedFragmentAdapter extends RecyclerView.Adapter<SavedFeedFrag
             btnRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onRemoveClicked(view);
+                    onRemoveClicked(view, getAdapterPosition());
                 }
             });
         }
+    }
 
-        void onRemoveClicked(View view) {
-            //DbHelper.getInstance(context).addSavedFeedRecord(alerts.get(getAdapterPosition()));
-            itemView.setEnabled(false);
-            itemView.setVisibility(View.GONE);
-            Snackbar.make(view, "Item Removed", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", null).show();
-            view.setEnabled(false);
-        }
+    void onRemoveClicked(View view, int pos) {
+        DbHelper.getInstance(context).removeAlert(alerts.get(pos));
+        removeItem(pos);
+        Snackbar.make(view, "Item Removed", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", null).show();
+        view.setEnabled(false);
+    }
+
+    public void addItem(int pos) {
+        this.notifyItemInserted(pos);
+        this.notifyItemRangeInserted(0, alerts.size());
+        this.notifyItemRangeChanged(pos, alerts.size());
+        this.notifyDataSetChanged();
+        Log.i(TAG, "From SavedFeedAdapter addItem");
+    }
+
+    void removeItem(int position) {
+        alerts.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, alerts.size());
+        notifyDataSetChanged();
+    }
+
+    public void updateItems() {
+
     }
 }

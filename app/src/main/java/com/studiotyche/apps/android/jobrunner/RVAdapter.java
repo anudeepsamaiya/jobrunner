@@ -16,7 +16,7 @@ import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 import java.util.List;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
-    String tag = "RVAdapter";
+    String TAG = "RVAdapter";
 
     static Context context;
     static List<Alert> alerts;
@@ -24,7 +24,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
     public RVAdapter(Context context, List<Alert> alerts) {
         RVAdapter.alerts = alerts;
         RVAdapter.context = context;
-        Log.d(tag, "recievd alerts " + alerts.size());
+        Log.d(TAG, "recievd alerts " + alerts.size());
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
         return alerts.size();
     }
 
-    public static class AlertViewHolder extends RecyclerView.ViewHolder {
+    public class AlertViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
         Button btnLink, btnSave;
 
@@ -60,24 +60,47 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.AlertViewHolder> {
             btnLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(alerts.get(getAdapterPosition()).getLink()));
-                    context.startActivity(browserIntent);
+                    onBtnLinkClicked(v, getAdapterPosition());
                 }
             });
 
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onSaveClicked(view);
+                    onSaveClicked(view, getAdapterPosition());
                 }
             });
         }
+    }
 
-        void onSaveClicked(View view) {
-            DbHelper.getInstance(context).addSavedFeedRecord(alerts.get(getAdapterPosition()));
-            Snackbar.make(view, "Item Saved", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO", null).show();
-            view.setEnabled(false);
-        }
+    private void onBtnLinkClicked(View v, int pos) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(alerts.get(pos).getLink()));
+        context.startActivity(browserIntent);
+    }
+
+    void onSaveClicked(View view, int pos) {
+        DbHelper.getInstance(context).saveAlert(alerts.get(pos));
+        FeedFragment.getInstance(FeedFragment.SAVED_FRAGMENT)
+                .addItem(FeedFragment.SAVED_FRAGMENT, pos);
+        removeItem(pos);
+        Snackbar.make(view, "Item Saved", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", null).show();
+        view.setEnabled(false);
+    }
+
+    public void addItem(int pos) {
+        alerts = DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 5);
+        this.notifyItemInserted(pos);
+        this.notifyItemRangeInserted(0, alerts.size());
+        this.notifyItemRangeChanged(pos, alerts.size());
+        this.notifyDataSetChanged();
+        Log.i(TAG, "From RvAdapterv addItem");
+    }
+
+    void removeItem(int position) {
+        alerts.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, alerts.size());
+        this.notifyDataSetChanged();
     }
 }

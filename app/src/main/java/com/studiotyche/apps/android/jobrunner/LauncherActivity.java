@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -23,6 +22,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.studiotyche.apps.android.jobrunner.persistence.AlertFeedTable;
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
 import java.lang.reflect.Type;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class LauncherActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "LauncherActivity";
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
@@ -46,14 +46,17 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
 
+        if (!DbHelper.getInstance(this).checkIfTableExists(AlertFeedTable.NAME))
+            getTopAlerts();
+
         registerWithGoogle();
         LocalBroadcastManager.getInstance(LauncherActivity.this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(AppPreferences.REGISTRATION_COMPLETE));
+
         Intent intent = new Intent();
         Bundle data = new Bundle();
         intent.putExtra("RegisteredWithGoogle", registeredWithGoogle);
         intent.putExtra("Information", mInformationTextString);
-        getTopAlerts();
         intent.setClass(this, MainActivity.class);
         startActivity(intent);
         this.finish();
@@ -104,23 +107,15 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     public void getTopAlerts() {
-        Log.i("jobrunner","inside getTopAlerts()");
+        Log.i(TAG, "inside getTopAlerts() making volley call");
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://gabja-harishvi.rhcloud.com/rest/getTop";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Type listType = new TypeToken<ArrayList<Alert>>() {
-                        }.getType();
-                        Log.i("jobrunner","got response.");
-                        ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
-                        for(Alert alert: alerts)
-                        DbHelper.getInstance(getApplicationContext()).addNewAlert(alert);
-                        MainActivity.alerts.clear();
-                        MainActivity.alerts.addAll(DbHelper.getInstance(getApplicationContext()).getAllAlerts());
-                        RecyclerView.Adapter adapter =  new RVAdapter(getApplicationContext(), MainActivity.alerts);
-                        AlertFeedFragment.rv.setAdapter(adapter);
+                        Log.i(TAG, "got response.");
+                        saveToDb(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -133,5 +128,20 @@ public class LauncherActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
+    }
+
+    private void saveToDb(String response) {
+        Type listType = new TypeToken<ArrayList<Alert>>() {
+        }.getType();
+        ArrayList<Alert> alerts = new Gson().fromJson(response, listType);
+        for (Alert alert : alerts) {
+            DbHelper.getInstance(this).addNewAlert(alert);
+            FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT)
+                    .addItem(FeedFragment.RECENT_FRAGMENT, 0);
+            FeedFragment.getInstance(FeedFragment.RECENT_FRAGMENT)
+                    .getAdapter(FeedFragment.RECENT_FRAGMENT)
+                    .notifyDataSetChanged();
+        }
+
     }
 }

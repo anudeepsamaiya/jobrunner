@@ -44,12 +44,13 @@ public class FeedFragment extends Fragment {
     public static FeedFragment newInstance(@Name int instance) {
         FeedFragment fragment = new FeedFragment();
         mInstance.add(instance, fragment);
+        Log.d(TAG, "Returning new Instance " + instance + " size " + mInstance.size());
         return mInstance.get(instance);
     }
 
     public static FeedFragment getInstance(@Name int instance) {
         if (mInstance.isEmpty() || mInstance.size() < 2) {
-            Log.d(TAG, "Returning new Instance " + instance + " size " + mInstance.size());
+            Log.d(TAG, "Calling newInstance for " + instance + " size " + mInstance.size());
             return newInstance(instance);
         }
 

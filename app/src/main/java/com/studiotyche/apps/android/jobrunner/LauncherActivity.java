@@ -33,7 +33,7 @@ import java.util.ArrayList;
  */
 public class LauncherActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "LauncherActivity";
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private BroadcastReceiver mRegistrationBroadcastReceiver;
@@ -107,14 +107,14 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     public void getTopAlerts() {
-        Log.i("jobrunner", "inside getTopAlerts()");
+        Log.i(TAG, "inside getTopAlerts() making volley call");
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://gabja-harishvi.rhcloud.com/rest/getTop";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("jobrunner", "got response.");
+                        Log.i(TAG, "got response.");
                         saveToDb(response);
                     }
                 }, new Response.ErrorListener() {

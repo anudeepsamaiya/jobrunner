@@ -136,12 +136,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.AlertViewHolde
     }
 
     public void addItem(int pos) {
-        alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 1));
+        alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 10));
         this.notifyItemInserted(pos);
         this.notifyItemRangeInserted(pos, alerts.size());
         this.notifyItemRangeChanged(pos, alerts.size());
         this.notifyDataSetChanged();
-        Log.i(TAG, "From FEEDAdapterv addItem");
+        Log.i(TAG, "From FEEDAdapterv addItem to " + tabName + " Size " + alerts.size());
     }
 
     void removeItem(int position) {

@@ -54,7 +54,7 @@ public final class DbHelper extends SQLiteOpenHelper {
         return mInstance;
     }
 
-    public void addNewAlert(Alert alert) {
+    public void addNewAlertToDB(Alert alert) {
         String title, description, link, timestamp;
         title = alert.getTitle();
         description = alert.getDesc();
@@ -146,6 +146,18 @@ public final class DbHelper extends SQLiteOpenHelper {
         cursor.close();
         sqliteDatabase.close();
         return tableExists;
+    }
+
+    public boolean checkIfRecordExists(String tableName, String columnName, String recordValue) {
+        Cursor cursor = getReadableDatabase(context)
+                .rawQuery("Select " + columnName + " From " + tableName +
+                        " Where " + columnName + " = '" + recordValue + "' ", null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.close();
+            return true;
+        }
+        cursor.close();
+        return false;
     }
 
     @Override

@@ -122,10 +122,11 @@ public class FeedFragment extends Fragment {
         }.getType();
         List<Alert> alerts = new Gson().fromJson(response, listType);
         for (Alert alert : alerts) {
-            DbHelper.getInstance(this.getActivity()).addNewAlert(alert);
-            this.alerts.addAll(0, DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.RECENT, 1));
-            adapter.notifyDataSetChanged();
+            DbHelper.getInstance(this.getActivity()).addNewAlertToDB(alert);
         }
 
+
+        ((FeedAdapter) adapter).addItem(0); //addItem at position 0
+        Log.d(TAG, "Alert size " + this.alerts.size());
     }
 }

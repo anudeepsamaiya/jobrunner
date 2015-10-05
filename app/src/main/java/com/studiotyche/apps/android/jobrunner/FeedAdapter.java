@@ -136,7 +136,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.AlertViewHolde
     }
 
     public void addItem(int pos) {
-        alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 10));
+        alerts.clear();
+        alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 20));
         this.notifyItemInserted(pos);
         this.notifyItemRangeInserted(pos, alerts.size());
         this.notifyItemRangeChanged(pos, alerts.size());

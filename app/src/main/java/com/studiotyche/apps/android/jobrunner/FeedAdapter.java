@@ -20,7 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.AlertViewHolder> {
-    String TAG = "RVAdapter";
+    String TAG = "FeedAdapter";
 
     @IntDef({RECENT, SAVED})
     @Retention(RetentionPolicy.SOURCE)
@@ -136,9 +136,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.AlertViewHolde
     }
 
     public void addItem(int pos) {
-        alerts = DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 20);
+        alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 1));
         this.notifyItemInserted(pos);
-        this.notifyItemRangeInserted(0, alerts.size());
+        this.notifyItemRangeInserted(pos, alerts.size());
         this.notifyItemRangeChanged(pos, alerts.size());
         this.notifyDataSetChanged();
         Log.i(TAG, "From FEEDAdapterv addItem");

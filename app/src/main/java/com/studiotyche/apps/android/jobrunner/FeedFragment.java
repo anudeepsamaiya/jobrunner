@@ -28,6 +28,10 @@ import java.util.List;
 /**
  * Created by AnudeepSamaiya on 29-09-2015.
  */
+
+/**
+ * TODO: show isVisited and lastVisited status of Alert link
+ */
 public class FeedFragment extends Fragment {
 
     private static final String TAG = "FeedFragment";
@@ -43,7 +47,7 @@ public class FeedFragment extends Fragment {
         FeedFragment feedFragment = new FeedFragment();
         Bundle args = new Bundle();
         args.putInt("Position", pos);
-        args.putParcelableArrayList("whichDataset", alerts);
+        args.putParcelableArrayList("Dataset", alerts);
         feedFragment.setArguments(args);
         return feedFragment;
     }
@@ -58,7 +62,7 @@ public class FeedFragment extends Fragment {
                 getTopAlerts();
 
         Bundle args = getArguments();
-        alerts = args.getParcelableArrayList("whichDataset");
+        alerts = args.getParcelableArrayList("Dataset");
         pos = args.getInt("Position");
 
         if (pos == 0)
@@ -83,7 +87,7 @@ public class FeedFragment extends Fragment {
         rv.setLayoutManager(llm);
         rv.addItemDecoration(itemDecoration);
         rv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
 
         return rootView;
     }
@@ -119,6 +123,7 @@ public class FeedFragment extends Fragment {
         List<Alert> alerts = new Gson().fromJson(response, listType);
         for (Alert alert : alerts) {
             DbHelper.getInstance(this.getActivity()).addNewAlert(alert);
+            this.alerts.addAll(0, DbHelper.getInstance(this.getActivity()).getAllAlerts(DbHelper.RECENT, 1));
             adapter.notifyDataSetChanged();
         }
 

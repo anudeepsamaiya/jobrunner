@@ -124,9 +124,8 @@ public class FeedFragment extends Fragment {
         for (Alert alert : alerts) {
             DbHelper.getInstance(this.getActivity()).addNewAlertToDB(alert);
         }
-
-
-        ((FeedAdapter) adapter).addItem(0); //addItem at position 0
+        if (pos == 0)
+            ((FeedAdapter) adapter).addItem(0); //addItem at position 0
         Log.d(TAG, "Alert size " + this.alerts.size());
     }
 }

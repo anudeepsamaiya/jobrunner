@@ -117,10 +117,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.AlertViewHolde
     void onSaveClicked(View view, int pos) {
         DbHelper.getInstance(context)
                 .saveAlert(alerts.get(pos));
-        FeedFragment.getInstance(
-                DbHelper.getInstance(context).getAllAlerts(DbHelper.SAVED, 20),
-                SAVED);
         removeItem(pos);
+        addItem(0);
         Snackbar.make(view, "Item Saved", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", null).show();
         view.setEnabled(false);
@@ -137,7 +135,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.AlertViewHolde
 
     public void addItem(int pos) {
         alerts.clear();
-        alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 20));
+        if (tabName == RECENT)
+            alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.RECENT, 20));
+        else if (tabName == SAVED)
+            alerts.addAll(pos, DbHelper.getInstance(context).getAllAlerts(DbHelper.SAVED, 20));
         this.notifyItemInserted(pos);
         this.notifyItemRangeInserted(pos, alerts.size());
         this.notifyItemRangeChanged(pos, alerts.size());

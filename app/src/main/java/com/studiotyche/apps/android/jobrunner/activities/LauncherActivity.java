@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +13,9 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.studiotyche.apps.android.jobrunner.AppPreferences;
+import com.studiotyche.apps.android.jobrunner.R;
+import com.studiotyche.apps.android.jobrunner.services.RegistrationIntentService;
 
 /**
  * Created by AnudeepSamaiya on 01-10-2015.

@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

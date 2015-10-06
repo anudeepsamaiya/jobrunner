@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.studiotyche.apps.android.jobrunner.R;
+import com.studiotyche.apps.android.jobrunner.models.Alert;
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
 import java.lang.annotation.Retention;

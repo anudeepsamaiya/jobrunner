@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -26,6 +26,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.studiotyche.apps.android.jobrunner.AppPreferences;
+import com.studiotyche.apps.android.jobrunner.R;
 
 import java.io.IOException;
 

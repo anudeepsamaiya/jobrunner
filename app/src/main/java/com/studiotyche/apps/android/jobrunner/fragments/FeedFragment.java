@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,8 +18,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.studiotyche.apps.android.jobrunner.R;
+import com.studiotyche.apps.android.jobrunner.adapters.FeedAdapter;
+import com.studiotyche.apps.android.jobrunner.models.Alert;
 import com.studiotyche.apps.android.jobrunner.persistence.AlertFeedTable;
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
+import com.studiotyche.apps.android.jobrunner.utils.DividerItemDecoration;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
-import com.studiotyche.apps.android.jobrunner.Alert;
+import com.studiotyche.apps.android.jobrunner.models.Alert;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

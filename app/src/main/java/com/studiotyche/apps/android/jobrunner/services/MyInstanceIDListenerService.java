@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.services;
 
 import android.content.Intent;
 

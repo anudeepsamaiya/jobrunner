@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,6 +12,9 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
+import com.studiotyche.apps.android.jobrunner.R;
+import com.studiotyche.apps.android.jobrunner.activities.MainActivity;
+import com.studiotyche.apps.android.jobrunner.models.Alert;
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
 public class MyGcmListenerService extends GcmListenerService {
@@ -23,11 +26,11 @@ public class MyGcmListenerService extends GcmListenerService {
         String message = data.getString("message");
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
-
+        Alert alert = null;
         if (from.startsWith("/topics/global")) {
             if (message != null) {
                 Gson gson = new Gson();
-                Alert alert = gson.fromJson(message, Alert.class);
+                alert = gson.fromJson(message, Alert.class);
 
                 Log.d(TAG, alert.getDesc() + " " + alert.getLink() + " " + alert.getTimeStamp() + " " + alert.getTitle());
 
@@ -37,10 +40,10 @@ public class MyGcmListenerService extends GcmListenerService {
             // normal downstream message.
         }
 
-        sendNotification(getResources().getString(R.string.app_name) + " You Have A New Job Notification");
+        sendNotification("You Have A New Job Notification.", alert.getTitle());
     }
 
-    private void sendNotification(String message) {
+    private void sendNotification(String message, String title) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -49,8 +52,9 @@ public class MyGcmListenerService extends GcmListenerService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("JobAlert")
+                .setContentTitle(getResources().getString(R.string.app_name))
                 .setContentText(message)
+                .setSubText(title)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);

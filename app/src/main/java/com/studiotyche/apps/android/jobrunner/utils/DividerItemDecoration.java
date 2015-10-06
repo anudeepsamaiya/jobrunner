@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;

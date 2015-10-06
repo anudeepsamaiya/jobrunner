@@ -1,4 +1,4 @@
-package com.studiotyche.apps.android.jobrunner;
+package com.studiotyche.apps.android.jobrunner.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.studiotyche.apps.android.jobrunner.R;
+import com.studiotyche.apps.android.jobrunner.adapters.FeedAdapter;
+import com.studiotyche.apps.android.jobrunner.adapters.PageAdapter;
+import com.studiotyche.apps.android.jobrunner.fragments.FeedFragment;
+import com.studiotyche.apps.android.jobrunner.models.Alert;
 import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
 
 import java.util.ArrayList;
@@ -23,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public static TextView mInformationTextView;
     ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

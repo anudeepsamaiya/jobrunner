@@ -53,28 +53,19 @@ public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.Aler
 
     public class AlertViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
-        Button btnLink, btnSave, btnShare;
+        Button btnLink, btnShare;
 
         AlertViewHolder(View itemView) {
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
             tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
             btnLink = (Button) itemView.findViewById(R.id.btnLink);
-            btnSave = (Button) itemView.findViewById(R.id.btnSave);
             btnShare = (Button) itemView.findViewById(R.id.btnShare);
 
             btnLink.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onBtnLinkClicked(v, getAdapterPosition());
-                }
-            });
-
-            btnSave.setText("Remove");
-            btnSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onRemoveClicked(view, getAdapterPosition());
                 }
             });
 
@@ -98,7 +89,7 @@ public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.Aler
         }
     }
 
-    void onRemoveClicked(View view, int pos) {
+    private void onRemoveClicked(View view, int pos) {
         DatabaseHelper.getInstance(context)
                 .removeAlert(alerts.get(pos));
         removeItem(pos);

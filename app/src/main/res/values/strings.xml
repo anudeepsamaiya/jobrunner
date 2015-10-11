@@ -9,4 +9,9 @@
         running the app again.</string>
     <string name="activity_main_name">Alerts</string>
     <string name="banner_ad_unit_id">ca-app-pub-8431423662318917/8669839986</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_saved">Saved</string>
+    <string name="saved_feed_activity_name">Saved Job Alerts</string>
+    <string name="btn_visit_link">Visit Website</string>
+    <string name="btn_save">Save</string>
 </resources>

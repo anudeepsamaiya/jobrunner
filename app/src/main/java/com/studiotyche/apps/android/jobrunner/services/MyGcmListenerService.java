@@ -15,7 +15,8 @@ import com.google.gson.Gson;
 import com.studiotyche.apps.android.jobrunner.R;
 import com.studiotyche.apps.android.jobrunner.activities.MainActivity;
 import com.studiotyche.apps.android.jobrunner.models.Alert;
-import com.studiotyche.apps.android.jobrunner.persistence.DbHelper;
+import com.studiotyche.apps.android.jobrunner.persistence.DatabaseHelper;
+import com.studiotyche.apps.android.jobrunner.persistence.OnDatabaseChangeListener;
 
 public class MyGcmListenerService extends GcmListenerService {
 
@@ -34,7 +35,14 @@ public class MyGcmListenerService extends GcmListenerService {
 
                 Log.d(TAG, alert.getDesc() + " " + alert.getLink() + " " + alert.getTimeStamp() + " " + alert.getTitle());
 
-                DbHelper.getInstance(this).addNewAlertToDB(alert);
+                DatabaseHelper.getInstance(this).addNewAlertToDB(alert);
+                DatabaseHelper.getInstance(this)
+                        .setDatabaseChangeListener(new OnDatabaseChangeListener() {
+                            @Override
+                            public void onChange() {
+                                // what to do here
+                            }
+                        });
             }
         } else {
             // normal downstream message.

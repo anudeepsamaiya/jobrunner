@@ -9,6 +9,7 @@
     <permission
         android:name="com.studiotyche.apps.android.jobrunner.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.studiotyche.apps.android.jobrunner.permission.C2D_MESSAGE" />
 
     <application
@@ -17,18 +18,30 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/activity_main_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".activities.SavedFeedActivity"
+            android:label="@string/saved_feed_activity_name"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".activities.MainActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+
         </activity>
+
         <activity
             android:name=".activities.LauncherActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -64,7 +77,6 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
         <service
             android:name=".services.RegistrationIntentService"
             android:exported="false">
@@ -72,7 +84,5 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-
     </application>
-
 </manifest>

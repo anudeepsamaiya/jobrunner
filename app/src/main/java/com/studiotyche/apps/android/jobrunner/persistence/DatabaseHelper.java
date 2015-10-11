@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by AnudeepSamaiya on 01-10-2015.
  */
 
-public final class DbHelper extends SQLiteOpenHelper {
+public final class DatabaseHelper extends SQLiteOpenHelper {
 
     @IntDef({RECENT, SAVED, INACTIVE, REMOVED})
     @Retention(RetentionPolicy.SOURCE)
@@ -32,26 +32,31 @@ public final class DbHelper extends SQLiteOpenHelper {
     public static final int REMOVED = 3;
 
     private Context context;
-    private static final String TAG = "DbHelper";
+    private static final String TAG = "DatabaseHelper";
 
-    private static final String DB_NAME = "GABJA";
-    private static final String DB_SUFFIX = ".db";
+    private static final String DB_NAME = "JOBRUNNER";
+    private static final String DB_SUFFIX = ".DB";
     private static final int DB_VERSION = 1;
 
-    private static DbHelper mInstance;
+    private static DatabaseHelper mInstance;
+    private OnDatabaseChangeListener databaseChangeListener;
 
-    private DbHelper(Context context) {
+    private DatabaseHelper(Context context) {
         super(context, DB_NAME + DB_SUFFIX, null, DB_VERSION);
         this.context = context;
     }
 
-    public static DbHelper getInstance(Context context) {
+    public static DatabaseHelper getInstance(Context context) {
         if (null == mInstance) {
-            mInstance = new DbHelper(context.getApplicationContext());
+            mInstance = new DatabaseHelper(context.getApplicationContext());
             Log.i(TAG, "Created a new Instance");
         }
         Log.i(TAG, "Returning current Instance");
         return mInstance;
+    }
+
+    public void setDatabaseChangeListener(OnDatabaseChangeListener databaseChangeListener) {
+        this.databaseChangeListener = databaseChangeListener;
     }
 
     public void addNewAlertToDB(Alert alert) {
@@ -61,22 +66,28 @@ public final class DbHelper extends SQLiteOpenHelper {
         link = alert.getLink();
         timestamp = alert.getTimeStamp();
 
-        SQLiteDatabase sqliteDatabase = getWritableDatabase(context);
-        sqliteDatabase.beginTransaction();
+        if (!checkIfRecordExists(AlertFeedTable.NAME, AlertFeedTable.COLUMN_LINK, link)) {
 
-        ContentValues cv = new ContentValues();
-        cv.put(AlertFeedTable.COLUMN_TITLE, title);
-        cv.put(AlertFeedTable.COLUMN_DESCRIPTION, description);
-        cv.put(AlertFeedTable.COLUMN_LINK, link);
-        cv.put(AlertFeedTable.COLUMN_TIMESTAMP, timestamp);
-        cv.put(AlertFeedTable.COLUMN_STATE, DbHelper.RECENT);
+            SQLiteDatabase sqliteDatabase = getWritableDatabase(context);
+            sqliteDatabase.beginTransaction();
 
-        sqliteDatabase.insert(AlertFeedTable.NAME, null, cv);
-        sqliteDatabase.setTransactionSuccessful();
-        sqliteDatabase.endTransaction();
-        sqliteDatabase.close();
+            ContentValues cv = new ContentValues();
+            cv.put(AlertFeedTable.COLUMN_TITLE, title);
+            cv.put(AlertFeedTable.COLUMN_DESCRIPTION, description);
+            cv.put(AlertFeedTable.COLUMN_LINK, link);
+            cv.put(AlertFeedTable.COLUMN_TIMESTAMP, timestamp);
+            cv.put(AlertFeedTable.COLUMN_STATE, DatabaseHelper.RECENT);
 
-        Log.d(TAG, "Added new alert " + title);
+            sqliteDatabase.insert(AlertFeedTable.NAME, null, cv);
+            sqliteDatabase.setTransactionSuccessful();
+            sqliteDatabase.endTransaction();
+            sqliteDatabase.close();
+
+//        databaseChangeListener.onChange();
+
+            Log.d(TAG, "Added new alert " + title);
+
+        }
     }
 
     public ArrayList<Alert> getAllAlerts(@State int state, int limit) {
@@ -89,7 +100,7 @@ public final class DbHelper extends SQLiteOpenHelper {
         Cursor cursor = sqliteDatabase.rawQuery("SELECT * FROM " + AlertFeedTable.NAME + " WHERE STATE = " + state + " ORDER BY "
                 + AlertFeedTable.COLUMN_TIMESTAMP + " DESC LIMIT " + limit, null);
 
-        Log.d(TAG + " getALlAlerts()", "Cursor size " + cursor.getCount());
+        Log.d(TAG, " getALlAlerts() " + "Cursor size " + cursor.getCount());
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
@@ -100,21 +111,21 @@ public final class DbHelper extends SQLiteOpenHelper {
                 timestamp = cursor.getString(cursor.getColumnIndex(AlertFeedTable.COLUMN_TIMESTAMP));
 
                 allAlerts.add(new Alert(id, title, description, link, timestamp));
-                Log.d(TAG + " getALlAlerts()", "added new alert to allalerts");
+                Log.d(TAG, " getALlAlerts() " + "added new alert to allalerts");
             } while (cursor.moveToNext());
         }
         cursor.close();
         sqliteDatabase.close();
-        Log.d(TAG + "getALlAlerts()", "Returning allalerts " + allAlerts.size());
+        Log.d(TAG, " getALlAlerts() " + "Returning allalerts " + allAlerts.size());
         return allAlerts;
     }
 
     public void removeAlert(Alert alert) {
-        updateAlertState(alert, DbHelper.INACTIVE);
+        updateAlertState(alert, DatabaseHelper.INACTIVE);
     }
 
     public void saveAlert(Alert alert) {
-        updateAlertState(alert, DbHelper.SAVED);
+        updateAlertState(alert, DatabaseHelper.SAVED);
     }
 
     public void updateAlertState(Alert alert, @State int state) {
@@ -132,6 +143,8 @@ public final class DbHelper extends SQLiteOpenHelper {
         sqliteDatabase.setTransactionSuccessful();
         sqliteDatabase.endTransaction();
         sqliteDatabase.close();
+
+//        databaseChangeListener.onChange();
     }
 
     public boolean checkIfTableExists(String tableName) {

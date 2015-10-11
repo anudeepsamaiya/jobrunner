@@ -40,11 +40,11 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_save"
         android:textColor="@color/textColorPrimary"
-        android:layout_alignTop="@+id/btnLink"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:drawableLeft="@drawable/ic_saved_24dp"
-        android:drawablePadding="3sp" />
+        android:drawablePadding="3sp"
+        android:layout_alignTop="@+id/btnLink"
+        android:layout_toLeftOf="@+id/btnShare"
+        android:layout_toStartOf="@+id/btnShare" />
 
     <Button
         android:id="@+id/btnShare"
@@ -52,9 +52,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_share"
-        android:layout_alignTop="@+id/btnSave"
-        android:layout_toLeftOf="@+id/btnSave"
-        android:layout_toStartOf="@+id/btnSave"
         android:drawableLeft="@drawable/ic_share_24dp"
-        android:drawablePadding="3sp" />
+        android:drawablePadding="3sp"
+        android:layout_alignTop="@+id/btnLink"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

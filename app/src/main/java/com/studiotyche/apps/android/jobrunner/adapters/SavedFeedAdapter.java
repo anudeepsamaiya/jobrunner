@@ -99,7 +99,7 @@ public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.Aler
         view.setEnabled(false);
     }
 
-    void removeItem(int position) {
+    public void removeItem(int position) {
         alerts.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, alerts.size());

@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.studiotyche.apps.android.jobrunner.R;
-import com.studiotyche.apps.android.jobrunner.adapters.RecentFeedAdapter;
 import com.studiotyche.apps.android.jobrunner.adapters.SavedFeedAdapter;
 import com.studiotyche.apps.android.jobrunner.models.Alert;
 import com.studiotyche.apps.android.jobrunner.persistence.DatabaseHelper;
@@ -73,7 +72,7 @@ public class SavedFeedActivity extends AppCompatActivity {
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                         DatabaseHelper.getInstance(SavedFeedActivity.this)
                                 .removeAlert(alerts.get(viewHolder.getAdapterPosition()));
-                        ((RecentFeedAdapter) adapter).removeItem(viewHolder.getAdapterPosition());
+                        ((SavedFeedAdapter) adapter).removeItem(viewHolder.getAdapterPosition());
                     }
                 });
 

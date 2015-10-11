@@ -1,34 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
--->
-    <color name="blue_grey_500">#607D8B</color>
-    <color name="blue_grey_600">#546E7A</color>
-    <color name="blue_grey_700">#455A64</color>
-    <color name="blue_grey_800">#37474F</color>
-    <color name="blue_grey_900">#263238</color>
-
     <color name="black">#000000</color>
-    <color name="blue_light">#ff33b5e5</color>
-    <color name="gray_light">#33999999</color>
-    <color name="green_light">#ff99cc00</color>
-    <color name="red_light">#ffff4444</color>
-    <color name="blue_dark">#ff0099cc</color>
-    <color name="green_dark">#ff669900</color>
-    <color name="red_dark">#ffcc0000</color>
-    <color name="purple">#ffaa66cc</color>
-    <color name="orange_light">#ffffbb33</color>
-    <color name="orange_dark">#ffff8800</color>
-    <color name="blue_bright">#ff00ddff</color>
-    <color name="gray_bright">#33CCCCCC</color>
-    <color name="indigo">#3F51B5</color>
-
     <color name="white">@android:color/white</color>
-
-
 
     <!-- Theme Text-->
 
@@ -41,13 +14,16 @@
     <color name="textColorPrimaryInverse">#212121</color>
     <color name="textColorSecondaryInverse">@color/text_dark</color>
 
-    <color name="divider">#B6B6B6</color>
-
     <!--Theme Default-->
     <!--<color name="colorPrimaryBackground">@color/theme_purple_primary</color>-->
-    <color name="colorPrimary">@color/purple</color>
+    <color name="colorPrimary">@color/theme_purple_primary</color>
     <color name="colorPrimaryDark">@color/theme_purple_primary_dark</color>
     <color name="colorAccent">@color/theme_purple_accent</color>
+
+    <!--Theme blue-->
+    <color name="color_Primary">#3F51B5</color>
+    <color name="color_PrimaryDark">#303F9F</color>
+    <color name="color_Accent">#FF4081</color>
 
     <!--Theme purple-->
     <color name="theme_purple_background">#b388ff</color>
@@ -57,20 +33,8 @@
     <color name="theme_purple_primary_dark">#6c4aa6</color>
 
     <!--Theme Orange-->
-    <color name="theme_orange_background">@color/orange_light</color>
-    <color name="theme_orange_primary">@color/orange_dark</color>
+    <color name="theme_orange_primary">#ffff8800</color>
+    <color name="theme_orange_primary_dark">#FF6600</color>
     <color name="theme_orange_accent">#ff9419</color>
     <color name="theme_orange_text">@color/text_light</color>
-    <color name="theme_orange_primary_dark">#6c4aa6</color>
-
-    <!--Dont Change the following theme colors-->
-
-    <!--    <color name="colorPrimary">#03A9F4</color>
-        <color name="colorPrimaryDark">#0288D1</color>
-        <color name="colorAccent">@color/colorPrimaryDark</color>-->
-
-
-
-    <color name="primary_light">#B3E5FC</color>
-
 </resources>

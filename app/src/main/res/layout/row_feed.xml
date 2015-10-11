@@ -38,19 +38,23 @@
         style="@style/Base.Widget.AppCompat.Button.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvDescription"
-        android:layout_toRightOf="@id/btnLink"
         android:text="@string/btn_save"
-        android:textColor="@color/textColorPrimary" />
+        android:textColor="@color/textColorPrimary"
+        android:layout_alignTop="@+id/btnLink"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:drawableLeft="@drawable/ic_saved_24dp"
+        android:drawablePadding="3sp" />
 
     <Button
         android:id="@+id/btnShare"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        style="@style/Base.Widget.AppCompat.Button.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_share"
-        android:textAppearance="?android:textAppearanceMediumInverse"
-        android:layout_below="@+id/tvDescription"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/btnSave"
+        android:layout_toLeftOf="@+id/btnSave"
+        android:layout_toStartOf="@+id/btnSave"
+        android:drawableLeft="@drawable/ic_share_24dp"
+        android:drawablePadding="3sp" />
 </RelativeLayout>

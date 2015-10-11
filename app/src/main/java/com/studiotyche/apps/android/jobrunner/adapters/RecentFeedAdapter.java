@@ -49,7 +49,7 @@ public class RecentFeedAdapter extends RecyclerView.Adapter<RecentFeedAdapter.Al
 
     public class AlertViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
-        Button btnLink, btnSave;
+        Button btnLink, btnSave, btnShare;
 
         AlertViewHolder(View itemView) {
             super(itemView);
@@ -57,6 +57,7 @@ public class RecentFeedAdapter extends RecyclerView.Adapter<RecentFeedAdapter.Al
             tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
             btnLink = (Button) itemView.findViewById(R.id.btnLink);
             btnSave = (Button) itemView.findViewById(R.id.btnSave);
+            btnShare = (Button) itemView.findViewById(R.id.btnShare);
 
             btnLink.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -69,6 +70,13 @@ public class RecentFeedAdapter extends RecyclerView.Adapter<RecentFeedAdapter.Al
                 @Override
                 public void onClick(View view) {
                     onSaveClicked(view, getAdapterPosition());
+                }
+            });
+
+            btnShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onShareClicked(getAdapterPosition());
                 }
             });
         }
@@ -96,16 +104,33 @@ public class RecentFeedAdapter extends RecyclerView.Adapter<RecentFeedAdapter.Al
         view.setEnabled(false);
     }
 
+    private void onShareClicked(int adapterPosition) {
+        Alert toShareAlert = alerts.get(adapterPosition);
+
+        String shareText = toShareAlert.getTitle() + " \n" +
+                toShareAlert.getDesc() + " \n" +
+                toShareAlert.getLink() + " \n" +
+                " Get more updates about Latest Jobs openings : \n" +
+                "https://play.google.com/store/apps/details?id=com.studiotyche.apps.android.jobrunner";
+
+        doShare(shareText);
+    }
+
+    private void doShare(String shareText) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+        context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
+    }
+
     public void addItem(int pos) {
         alerts.clear();
         alerts.addAll(pos, DatabaseHelper.getInstance(context).getAllAlerts(DatabaseHelper.RECENT, 20));
-       /* else if (tabName == SAVED)
-            alerts.addAll(pos, DatabaseHelper.getInstance(context).getAllAlerts(DatabaseHelper.SAVED, 20));*/
         this.notifyItemInserted(pos);
         this.notifyItemRangeInserted(pos, alerts.size());
         this.notifyItemRangeChanged(pos, alerts.size());
         this.notifyDataSetChanged();
-        Log.i(TAG, "From FEEDAdapterv addItem to " + " Size " + alerts.size());
+        Log.i(TAG, "From Adapter addItem to " + " Size " + alerts.size());
     }
 
     public void removeItem(int position) {

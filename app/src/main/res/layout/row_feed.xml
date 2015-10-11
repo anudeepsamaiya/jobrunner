@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="30dp"
-    android:paddingRight="30dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:paddingTop="20dp"
     android:paddingBottom="20dp">
 
@@ -38,10 +38,7 @@
         style="@style/Base.Widget.AppCompat.Button.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_save"
-        android:textColor="@color/textColorPrimary"
         android:drawableLeft="@drawable/ic_saved_24dp"
-        android:drawablePadding="3sp"
         android:layout_alignTop="@+id/btnLink"
         android:layout_toLeftOf="@+id/btnShare"
         android:layout_toStartOf="@+id/btnShare" />
@@ -51,9 +48,7 @@
         style="@style/Base.Widget.AppCompat.Button.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_share"
         android:drawableLeft="@drawable/ic_share_24dp"
-        android:drawablePadding="3sp"
         android:layout_alignTop="@+id/btnLink"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

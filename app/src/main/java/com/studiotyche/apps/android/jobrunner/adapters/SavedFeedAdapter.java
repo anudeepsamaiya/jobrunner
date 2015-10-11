@@ -53,7 +53,7 @@ public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.Aler
 
     public class AlertViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDescription;
-        Button btnLink, btnSave;
+        Button btnLink, btnSave, btnShare;
 
         AlertViewHolder(View itemView) {
             super(itemView);
@@ -61,6 +61,7 @@ public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.Aler
             tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
             btnLink = (Button) itemView.findViewById(R.id.btnLink);
             btnSave = (Button) itemView.findViewById(R.id.btnSave);
+            btnShare = (Button) itemView.findViewById(R.id.btnShare);
 
             btnLink.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,6 +75,13 @@ public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.Aler
                 @Override
                 public void onClick(View view) {
                     onRemoveClicked(view, getAdapterPosition());
+                }
+            });
+
+            btnShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onShareClicked(getAdapterPosition());
                 }
             });
         }
@@ -98,6 +106,26 @@ public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.Aler
                 .setAction("UNDO", null).show();
         view.setEnabled(false);
     }
+
+    private void onShareClicked(int adapterPosition) {
+        Alert toShareAlert = alerts.get(adapterPosition);
+
+        String shareText = toShareAlert.getTitle() + " \n" +
+                toShareAlert.getDesc() + " \n" +
+                toShareAlert.getLink() + " \n" +
+                " Get more updates about Latest Jobs openings : \n" +
+                "https://play.google.com/store/apps/details?id=com.studiotyche.apps.android.jobrunner";
+
+        doShare(shareText);
+    }
+
+    private void doShare(String shareText) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+        context.startActivity(Intent.createChooser(sharingIntent, "Share using"));
+    }
+
 
     public void removeItem(int position) {
         alerts.remove(position);

@@ -42,6 +42,7 @@ import com.studiotyche.apps.android.jobrunner.persistence.AlertFeedTable;
 import com.studiotyche.apps.android.jobrunner.persistence.DatabaseHelper;
 import com.studiotyche.apps.android.jobrunner.services.RegistrationIntentService;
 import com.studiotyche.apps.android.jobrunner.utils.DividerItemDecoration;
+import com.studiotyche.apps.android.jobrunner.utils.customtabs.CustomTabActivityHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
     List<Alert> alerts = new ArrayList<Alert>();
 
+    CustomTabActivityHelper mCustomTabActivityHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         if (ab != null) {
             ab.setTitle(this.getTitle());
         }
-
+        mCustomTabActivityHelper = new CustomTabActivityHelper();
         setupRecyclerView();
 
         mAdView = (AdView) findViewById(R.id.adView);
@@ -96,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         alerts = DatabaseHelper.getInstance(this).getAllAlerts(DatabaseHelper.RECENT, 20);
-        adapter = new RecentFeedAdapter(this, alerts);
+        adapter = new RecentFeedAdapter(this, this, mCustomTabActivityHelper, alerts);
 
         rv = (RecyclerView) findViewById(R.id.recyclerview);
         llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -104,11 +107,13 @@ public class MainActivity extends AppCompatActivity {
 
         itemTouchHelper = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                    @Override
                     public boolean onMove(RecyclerView recyclerView,
                                           RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                         return true;// true if moved, false otherwise
                     }
 
+                    @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                         DatabaseHelper.getInstance(MainActivity.this)
                                 .removeAlert(alerts.get(viewHolder.getAdapterPosition()));
@@ -136,6 +141,18 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCustomTabActivityHelper.bindCustomTabsService(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mCustomTabActivityHelper.unbindCustomTabsService(this);
+    }
+
     public void getTopAlerts() {
         progressBar = (ProgressBar) findViewById(R.id.pbFetchingTopFeed);
         progressBar.setVisibility(View.VISIBLE);
@@ -148,14 +165,18 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressBar.setVisibility(View.GONE);
                         Log.i(TAG, "got response. " + response);
                         saveToDb(response);
+                        progressBar.setVisibility(View.GONE);
+                        rv.setVisibility(View.VISIBLE);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressBar.setVisibility(View.GONE);
+                rv.setVisibility(View.VISIBLE);
             }
         });
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
@@ -185,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                         PreferenceManager.getDefaultSharedPreferences(context);
                 boolean sentToken = sharedPreferences
                         .getBoolean(AppPreferences.SENT_TOKEN_TO_SERVER, false);
-                Log.i("joberio", "checking registration status: " + sentToken);
+                Log.i(TAG, "checking registration status: " + sentToken);
                 if (sentToken) {
                 } else {
                     rv.setVisibility(View.GONE);
@@ -238,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_refresh) {
+            rv.setVisibility(View.GONE);
             getTopAlerts();
         }
 

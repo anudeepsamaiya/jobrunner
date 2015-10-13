@@ -1,8 +1,5 @@
 <resources>>
     <style name="AppTheme" parent="Base.AppTheme">
-
-        <item name="android:indeterminateTint">@android:color/white</item>
-
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>

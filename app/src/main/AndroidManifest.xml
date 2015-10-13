@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.studiotyche.apps.android.jobrunner">
+
+    <uses-sdk
+        android:targetSdkVersion="23"
+        android:minSdkVersion="10"
+        tools:overrideLibrary="android.support.customtabs" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -25,7 +31,7 @@
 
         <activity
             android:name=".activities.SavedFeedActivity"
-            android:label="@string/saved_feed_activity_name"
+            android:label="@string/activity_saved_feed_name"
             android:theme="@style/AppTheme"
             android:parentActivityName=".activities.MainActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->

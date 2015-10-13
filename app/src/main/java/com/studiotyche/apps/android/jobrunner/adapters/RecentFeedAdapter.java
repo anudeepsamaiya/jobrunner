@@ -170,11 +170,13 @@ public class RecentFeedAdapter extends RecyclerView.Adapter<RecentFeedAdapter.Al
     private CustomTabActivityHelper.ConnectionCallback mConnectionCallback = new CustomTabActivityHelper.ConnectionCallback() {
         @Override
         public void onCustomTabsConnected() {
+
             Toast.makeText(context, "Service Connected", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCustomTabsDisconnected() {
+
             Toast.makeText(context, "Service DisConnected", Toast.LENGTH_SHORT).show();
         }
     };

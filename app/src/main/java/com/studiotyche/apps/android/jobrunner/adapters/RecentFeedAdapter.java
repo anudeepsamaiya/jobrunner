@@ -110,8 +110,8 @@ public class RecentFeedAdapter extends RecyclerView.Adapter<RecentFeedAdapter.Al
         String shareText = toShareAlert.getTitle() + " \n" +
                 toShareAlert.getDesc() + " \n" +
                 toShareAlert.getLink() + " \n" +
-                " Get more updates about Latest Jobs openings : \n" +
-                "https://play.google.com/store/apps/details?id=com.studiotyche.apps.android.jobrunner";
+                "Get more such updates on JobRunner\n" +
+                "https://goo.gl/b3Nko0";
 
         doShare(shareText);
     }

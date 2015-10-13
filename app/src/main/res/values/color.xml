@@ -19,6 +19,7 @@
     <color name="colorPrimary">@color/theme_purple_primary</color>
     <color name="colorPrimaryDark">@color/theme_purple_primary_dark</color>
     <color name="colorAccent">@color/theme_purple_accent</color>
+    <color name="colorAccentGreen">#CDDC39</color>
 
     <!--Theme blue-->
     <color name="color_Primary">#3F51B5</color>

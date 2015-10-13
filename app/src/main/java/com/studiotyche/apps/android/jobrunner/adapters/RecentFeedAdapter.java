@@ -28,7 +28,7 @@ import com.studiotyche.apps.android.jobrunner.utils.customtabs.WebviewFallback;
 import java.util.List;
 
 public class RecentFeedAdapter extends RecyclerView.Adapter<RecentFeedAdapter.AlertViewHolder> {
-    String TAG = "FeedAdapter";
+    String TAG = "RecentFeedAdapter";
 
     Activity activity;
 

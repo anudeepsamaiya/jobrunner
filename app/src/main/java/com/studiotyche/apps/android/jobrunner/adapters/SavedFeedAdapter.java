@@ -32,7 +32,7 @@ import com.studiotyche.apps.android.jobrunner.utils.customtabs.WebviewFallback;
 import java.util.List;
 
 public class SavedFeedAdapter extends RecyclerView.Adapter<SavedFeedAdapter.AlertViewHolder> {
-    String TAG = "FeedAdapter";
+    String TAG = "SavedFeedAdapter";
 
     Activity activity;
     Context context;

@@ -17,6 +17,7 @@ import com.studiotyche.apps.android.jobrunner.adapters.SavedFeedAdapter;
 import com.studiotyche.apps.android.jobrunner.models.Alert;
 import com.studiotyche.apps.android.jobrunner.persistence.DatabaseHelper;
 import com.studiotyche.apps.android.jobrunner.utils.DividerItemDecoration;
+import com.studiotyche.apps.android.jobrunner.utils.customtabs.CustomTabActivityHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ public class SavedFeedActivity extends AppCompatActivity {
     RecyclerView.Adapter adapter;
 
     List<Alert> alerts = new ArrayList<Alert>();
+
+    CustomTabActivityHelper mCustomTabActivityHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class SavedFeedActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         alerts = DatabaseHelper.getInstance(this).getAllAlerts(DatabaseHelper.SAVED, 20);
-        adapter = new SavedFeedAdapter(this, alerts);
+        adapter = new SavedFeedAdapter(this, this, mCustomTabActivityHelper, alerts);
 
         rv = (RecyclerView) findViewById(R.id.recyclerview);
         llm = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -80,6 +83,18 @@ public class SavedFeedActivity extends AppCompatActivity {
         rv.addItemDecoration(itemDecoration);
         rv.setAdapter(adapter);
         itemTouchHelper.attachToRecyclerView(rv);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCustomTabActivityHelper.bindCustomTabsService(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mCustomTabActivityHelper.unbindCustomTabsService(this);
     }
 
     @Override
